@@ -1,6 +1,5 @@
 import argparse
 import sys
-import os
 
 
 def parse_arguments():
@@ -15,6 +14,7 @@ def read_csv_file(filepath):
     Читает CSV файл без использования csv модуля.
     Возвращает список словарей по строкам файла.
     """
+    print(filepath, "+++++")
     with open(filepath, 'r', encoding='utf-8') as f:
         lines = f.read().splitlines()
 
