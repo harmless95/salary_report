@@ -22,39 +22,33 @@ class TestPayout(unittest.TestCase):
         if os.path.exists(self.tmp_path):
             os.remove(self.tmp_path)
 
+    @staticmethod
     def is_valid_email(email: str):
         # Регулярное выражение для проверки адреса электронной почты
         pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
         return re.match(pattern, email) is not None
 
+    @staticmethod
     def is_in_range(number: int, min_value: int, max_value: int):
         return min_value <= number <= max_value
 
     def test_load_employees(self):
         global csv_content
-        try:
-            tmp_fd, tmp_path = tempfile.mkstemp(suffix='.csv')
-            with os.fdopen(tmp_fd, 'w', encoding='utf-8') as f:
-                f.write(csv_content)
-            employees = load_employees([tmp_path])
+        employees = load_employees([self.tmp_path])
 
-            id = employees[0]["id"]
-            email = employees[0]['email']
-            name = "Alice Johnson"
-            department = employees[0]['department']
-            hours_worked = employees[0]['hours_worked']
+        id = employees[0]["id"]
+        email = employees[0]['email']
+        name = "Alice Johnson"
+        department = employees[0]['department']
+        hours_worked = employees[0]['hours_worked']
 
-            self.assertIsInstance(int(id), int)
-            self.assertTrue(self.is_valid_email(email), f"Should be valid: {email}")
-            self.assertEqual(employees[0]['name'], name)
-            self.assertIsInstance(department, str)
-            self.assertEqual(len(employees), 2)
-            self.assertIsInstance(int(hours_worked), int)
-            self.assertTrue(self.is_in_range(int(hours_worked), 150, 170))
-        finally:
-            # Удаляем временный файл по окончании
-            os.remove(tmp_path)
-            print(f"Временный файл удалён: {tmp_path}")
+        self.assertIsInstance(int(id), int)
+        self.assertTrue(self.is_valid_email(email), f"Should be valid: {email}")
+        self.assertEqual(employees[0]['name'], name)
+        self.assertIsInstance(department, str)
+        self.assertEqual(len(employees), 2)
+        self.assertIsInstance(int(hours_worked), int)
+        self.assertTrue(self.is_in_range(int(hours_worked), 150, 170))
 
     def test_generate_payout_report(self):
         employees = [
